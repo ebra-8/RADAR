@@ -10,15 +10,19 @@ This document summarizes the installation instructions and steps for developing 
 Here are the recommended steps to create a virtual environment and install the requirements.
 
 *virtual env*
+
 conda create -n rlkit python=3.6
 
 *sklearn*
+
 pip3 install scikit-learn==0.18.2
 
 *lief*
+
 pip3 install https://github.com/lief-project/LIEF/releases/download/0.7.0/linux_lief-0.7.0_py3.6.tar.gz
 
 *pytorch (Having a GPU is not mandatory)*
+
 pip3 install torch==0.4.1
 
 *gym*
@@ -26,8 +30,8 @@ pip3 install torch==0.4.1
 pip3 install gym==0.9.2
 
 *upx for file compression*
-chmod +wrx /home/eb/ws/rlkit_bibuk/rlkit/torch/gym_malware/envs/controls/UPX/upx
 
+chmod +wrx /home/eb/ws/rlkit_bibuk/rlkit/torch/gym_malware/envs/controls/UPX/upx
 
 *PyTorch*
 
