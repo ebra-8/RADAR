@@ -1,0 +1,119 @@
+"""
+Run PyTorch Soft Actor Critic on Pendulum-v0.
+
+NOTE: You need PyTorch 0.3 or more (to have torch.distributions)
+"""
+import numpy as np
+import random
+import gym
+import copy
+from rlkit.exploration_strategies.base import PolicyWrappedWithExplorationStrategy
+from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
+from rlkit.torch.torch_rl_algorithm import TorchBatchRLAlgorithm
+import rlkit.torch.pytorch_util as ptu
+from rlkit.launchers.launcher_util import setup_logger
+from rlkit.torch.sac.policies_Disc import Discrete
+from rlkit.samplers.data_collector import MdpPathCollector
+from rlkit.torch.sac.virel_Disc import Virel
+from rlkit.torch.networks import FlattenMlp
+from rlkit.exploration_strategies.epsilon_greedy import EpsilonGreedy
+import sys
+
+def experiment(variant):
+    eval_env = gym.make(variant['env'])
+    ##eval_env._max_episode_steps = 5000
+    expl_env = gym.make(variant['env'])
+    ##expl_env._max_episode_steps = 5000
+    obs_dim = int(np.prod(eval_env.observation_space.shape))
+    action_dim = eval_env.action_space.n
+
+    net_size = variant['net_size']
+    qf = FlattenMlp(
+        hidden_sizes=[net_size, net_size],
+        input_size=obs_dim + action_dim, ## remove concatenation with actions for discrete case
+        output_size=action_dim,
+    )
+    vf = FlattenMlp(
+        hidden_sizes=[net_size, net_size],
+        input_size=obs_dim,
+        output_size=1,
+    )
+    policy = Discrete(
+        hidden_sizes=[net_size, net_size],
+        obs_dim=obs_dim,
+        action_dim=action_dim,
+    )
+    target_qf = copy.deepcopy(qf)
+    target_policy = copy.deepcopy(policy)
+    eval_path_collector = MdpPathCollector(eval_env, policy)
+    exploration_policy = PolicyWrappedWithExplorationStrategy(
+        exploration_strategy=EpsilonGreedy(action_space=expl_env.action_space),
+        policy=policy,
+    )
+    expl_path_collector = MdpPathCollector(expl_env, exploration_policy)
+    replay_buffer = EnvReplayBuffer(variant['replay_buffer_size'], expl_env)
+    
+    trainer = Virel(
+        env=eval_env,
+        qf=qf,
+        vf=vf,
+        target_qf=target_qf,
+        policy=policy,
+        target_policy=target_policy,
+        **variant['trainer_kwargs']
+    )
+    
+    algorithm = TorchBatchRLAlgorithm(
+        trainer=trainer,
+        exploration_env=expl_env,
+        evaluation_env=eval_env,
+        exploration_data_collector=expl_path_collector,
+        evaluation_data_collector=eval_path_collector,
+        replay_buffer=replay_buffer,
+        **variant['algorithm_kwargs']
+    )
+    algorithm.to(ptu.device)
+    algorithm.train()
+
+if __name__ == "__main__":    
+    ##env_name = 'CartPole-v0' 
+    env_name = 'Acrobot-v1' 
+    ##env_name = 'MountainCar-v0'
+    
+    epochs=8000
+    reward_scale = 5
+    logger_name = "-"
+    init_seed = 1
+    beta_scale = 0.004
+    variant = dict(
+        algorithm_kwargs=dict(
+            num_epochs=int(epochs),
+            num_eval_steps_per_epoch=1000,
+            num_trains_per_train_loop=1000,
+            num_expl_steps_per_train_loop=1000,
+            min_num_steps_before_training=10000,
+            max_path_length=1000,
+            batch_size=128,
+        ),
+        trainer_kwargs=dict(
+            discount=0.99,
+            reward_scale=float(reward_scale),
+            soft_target_tau=0.001,
+            policy_lr=5E-4,##3E-4,
+            qf_lr=5E-4,##3E-4,
+            vf_lr=5E-4,##3E-4,
+        ),
+        replay_buffer_size=int(1E6),
+        net_size=300,
+        env=env_name,
+        #algo_seed=int(init_seed),
+    )
+    seed=int(1)
+    random.seed(seed)
+    np.random.seed(seed)
+    name = "virel_" + "Disc_" + str(env_name) + str(init_seed) + "_" + str(reward_scale) + "_" + str(beta_scale)
+    setup_logger(name, variant=variant)
+    ptu.set_gpu_mode(True)
+    experiment(variant)
+    
+    
