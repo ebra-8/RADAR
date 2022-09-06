@@ -9,7 +9,7 @@ This document summarizes the installation instructions and steps for developing 
 
 Here are the recommended steps to create a virtual environment and install the requirements.
 
-*virtual env*
+**virtual env**
 
 conda create -n rlkit python=3.6
 
