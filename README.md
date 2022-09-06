@@ -48,6 +48,7 @@ The generated adversarial samples will be stored in "RADAR/gym-malware/evaded/bl
 Pretrained MalConv, NoNeg and Ember LightGBM malware detector models are included in the code at RADAR/gym-malware/gym_malware/envs/utils under malconv.checkpoint, nonneg.checkpoint, and gradient_boosting.pkl.
 
 ***Execution***
+
 To conduct attack emulation, run "RADAR/rlkit/torch/sac/virel_exp_Gumbel.py."
 
 And to enhance adversarial robustness of a specific model run "RADAR/rlkit/hardening.py."
