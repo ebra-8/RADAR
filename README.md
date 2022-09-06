@@ -9,7 +9,7 @@ This document summarizes the installation instructions and steps for developing 
 
 Here are the recommended steps to create a virtual environment and install the requirements.
 
-*virtual env*
+*virtual env
 
 conda create -n rlkit python=3.6
 
@@ -31,7 +31,7 @@ pip3 install gym==0.9.2
 
 *upx for file compression*
 
-chmod +wrx /home/eb/ws/rlkit_bibuk/rlkit/torch/gym_malware/envs/controls/UPX/upx
+chmod +wrx /rlkit/torch/gym_malware/envs/controls/UPX/upx
 
 *PyTorch*
 
