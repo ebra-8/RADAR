@@ -9,33 +9,29 @@ This document summarizes the installation instructions and steps for developing 
 
 Here are the recommended steps to create a virtual environment and install the requirements.
 
-**virtual env**
+**virtual environment**
 
 conda create -n rlkit python=3.6
 
-*sklearn*
+**scikit-learn**
 
 pip3 install scikit-learn==0.18.2
 
-*lief*
+**LIEF**
 
 pip3 install https://github.com/lief-project/LIEF/releases/download/0.7.0/linux_lief-0.7.0_py3.6.tar.gz
 
-*pytorch (Having a GPU is not mandatory)*
+**PyTorch (Having a GPU is Not necessary - the code can work on both CPU and GPU)**
 
-pip3 install torch==0.4.1
+conda install pytorch==1.7.0 cpuonly -c pytorch
 
-*gym*
+**OPenAI Gym**
 
 pip3 install gym==0.9.2
 
-*upx for file compression*
+**UPX for file compression**
 
 chmod +wrx /rlkit/torch/gym_malware/envs/controls/UPX/upx
-
-*PyTorch*
-
-conda install pytorch==1.7.0 cpuonly -c pytorch
 
 Note: Some absolute paths of files may need to be changed to your local file system.
 
