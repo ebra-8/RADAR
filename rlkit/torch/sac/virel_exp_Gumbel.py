@@ -1,7 +1,5 @@
 """
-Run PyTorch Soft Actor Critic on Pendulum-v0.
-
-NOTE: You need PyTorch 0.3 or more (to have torch.distributions)
+NOTE: You need PyTorch 0.3 or higher (to have torch.distributions)
 """
 import numpy as np
 import random
