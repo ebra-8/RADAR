@@ -49,6 +49,4 @@ Pretrained MalConv, NoNeg and Ember LightGBM malware detector models are include
 
 ***Execution***
 
-To conduct attack emulation, run "RADAR/rlkit/torch/sac/virel_exp_Gumbel.py."
-
-And to enhance adversarial robustness of a specific model run "RADAR/rlkit/hardening.py."
+To conduct attack emulation, run "RADAR/rlkit/torch/sac/virel_exp_Gumbel.py." Also, to enhance adversarial robustness of a specific model, you can run "RADAR/rlkit/hardening.py."
