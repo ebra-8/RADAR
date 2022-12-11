@@ -1,5 +1,5 @@
 """
-NOTE: You need PyTorch 0.3 or higher (to have torch.distributions)
+NOTE: PyTorch 0.3 or higher is needed to have torch.distributions
 """
 import numpy as np
 import random
